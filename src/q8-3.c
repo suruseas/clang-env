@@ -42,43 +42,26 @@ void battle(int base[HEIGHT][WIDTH], int result[HEIGHT][WIDTH])
     for (int j = 0; j < WIDTH; j++)
     {
       int suvivors = 0;
-      // 左上
-      if (i - 1 >= 0 && j - 1 >= 0 && base[i - 1][j - 1] == 1)
-        suvivors++;
-      // 上
-      if (i - 1 >= 0 && base[i - 1][j] == 1)
-        suvivors++;
-      // 右上
-      if (i - 1 >= 0 && j + 1 < WIDTH && base[i - 1][j + 1] == 1)
-        suvivors++;
-      // 左
-      if (j - 1 >= 0 && base[i][j - 1] == 1)
-        suvivors++;
-      // 右
-      if (j + 1 < WIDTH && base[i][j + 1] == 1)
-        suvivors++;
-      // 左下
-      if (i + 1 < HEIGHT && j - 1 >= 0 && base[i + 1][j - 1] == 1)
-        suvivors++;
-      // 下
-      if (i + 1 < HEIGHT && base[i + 1][j] == 1)
-        suvivors++;
-      // 右下
-      if (i + 1 < HEIGHT && j + 1 < WIDTH && base[i + 1][j + 1] == 1)
-        suvivors++;
+
+      // 上から下へ走査
+      for (int y = i - 1; y <= i + 1; y++)
+      {
+        // 左から右へ走査
+        for (int x = j - 1; x <= j + 1; x++)
+        {
+          // それ自体はカウントしない
+          if (y == i && x == j)
+            continue;
+          // 範囲外はカウントしない
+          if (y < 0 || y >= HEIGHT || x < 0 || x >= WIDTH)
+            continue;
+          if (base[y][x] == 1)
+            suvivors++;
+        }
+      }
 
       // 生死判定
-      bool is_alive = false;
-      if (base[i][j] == 1)
-      {
-        if (suvivors == 2 || suvivors == 3)
-          is_alive = true;
-      }
-      else
-      {
-        if (suvivors == 3)
-          is_alive = true;
-      }
+      bool is_alive = (suvivors == 3 || suvivors == 2 && base[i][j] == 1);
 
       result[i][j] = is_alive ? 1 : 0;
     }
